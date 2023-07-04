@@ -53,7 +53,7 @@ fun NewsItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = article.author,
+                    text = article.author.toString(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = typography.titleSmall

@@ -1,5 +1,6 @@
 package com.dna.newsapp.data.repository.news.impl
 
+import android.util.Log
 import com.dna.newsapp.data.remote.ApiService
 import com.dna.newsapp.data.repository.news.NewsRepository
 import com.dna.newsapp.model.NewsResponse

@@ -12,7 +12,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dna.newsapp.R
 import com.dna.newsapp.ui.screen.home.HomeViewModel
-import com.dna.newsapp.ui.screen.home.LukaKuRoute
+import com.dna.newsapp.ui.screen.home.Home
 
 fun NavGraphBuilder.mainNavGraph(
     onTapItem: (String, NavBackStackEntry) -> Unit,
@@ -20,10 +20,26 @@ fun NavGraphBuilder.mainNavGraph(
     composable(route = MainDestinations.HOME_ROUTE) { from ->
         val homeViewModel: HomeViewModel = hiltViewModel()
 
-        LukaKuRoute(
+        Home(
             viewModel = homeViewModel,
-            onTapItem = { value -> onTapItem(value, from) },
-        )
+        ) { value -> onTapItem(value, from) }
+    }
+
+    composable(route = MainDestinations.SEARCH_ROUTE) { from ->
+//        val homeViewModel: HomeViewModel = hiltViewModel()
+
+//        Search(
+//            viewModel = homeViewModel,
+//            onTapItem = { value -> onTapItem(value, from) },
+//        )
+    }
+    composable(route = MainDestinations.HISTORY_ROUTE) { from ->
+//        val homeViewModel: HomeViewModel = hiltViewModel()
+
+//        Activity(
+//            viewModel = homeViewModel,
+//            onTapItem = { value -> onTapItem(value, from) },
+//        )
     }
 }
 

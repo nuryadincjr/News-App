@@ -3,4 +3,6 @@
     <string name="history">History</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
+    <string name="retry">Retry</string>
+    <string name="load_article">Load Article</string>
 </resources>

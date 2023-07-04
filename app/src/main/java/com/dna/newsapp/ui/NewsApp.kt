@@ -13,6 +13,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +30,7 @@ fun NewsApp() {
         bottomBar = {
             AppBottomBar(
                 tabs = appState.bottomBarTabs,
-                currentRoute = appState.currentRoute!!,
+                currentRoute = appState.currentRoute,
                 navigateToRoute = appState::navigateToRoute
             )
         },

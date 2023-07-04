@@ -24,8 +24,8 @@ class NewsAppState(
     val navController: NavHostController
 ) {
     val bottomBarTabs = MainTabs.values()
-    val currentRoute: String?
-        get() = navController.currentDestination?.route
+    val currentRoute: String
+        get() = navController.currentDestination?.route?: MainDestinations.HOME_ROUTE
 
     fun navigateToRoute(route: String) {
         if (route != currentRoute) {

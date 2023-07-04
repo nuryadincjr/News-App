@@ -84,7 +84,7 @@ class HomeViewModel @Inject constructor(
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            newsRepository.getNews("id").collect { result ->
+            newsRepository.getNews("us").collect { result ->
                 result.onSuccess { newsResponse ->
                     viewModelState.update {
                         it.copy(
@@ -97,6 +97,7 @@ class HomeViewModel @Inject constructor(
                 result.onFailure { throwable ->
                     viewModelState.update {
                         it.copy(
+                            newsResponse = null,
                             isLoading = false,
                             errorMessages = throwable.message.toString()
                         )
