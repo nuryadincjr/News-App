@@ -14,12 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -37,6 +41,11 @@ fun SearchBar(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     TextField(
         value = searchInput.value,
         onValueChange = onSearchInputChanged,
@@ -44,7 +53,8 @@ fun SearchBar(
         leadingIcon = { Icon(Icons.Filled.Search, null) },
         modifier = modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraLarge),
+            .clip(MaterialTheme.shapes.extraLarge)
+            .focusRequester(focusRequester),
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(

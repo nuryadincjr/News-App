@@ -23,9 +23,9 @@ interface NewsRepository {
 
     fun getSortFilter(): List<Filter>
 
-    suspend fun getNews():Flow<Result<List<NewsEntity>>>
+    fun getNews():Flow<List<NewsEntity>?>
 
-    suspend fun insertNews(entities: NewsEntity): Long
+    suspend fun insertNews(entities: NewsEntity)
 
-    suspend fun deleteNews(id: String): Int
+    suspend fun deleteNews(id: String)
 }

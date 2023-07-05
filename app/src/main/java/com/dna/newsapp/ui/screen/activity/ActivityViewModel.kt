@@ -79,23 +79,12 @@ class ActivityViewModel @Inject constructor(
 
         viewModelScope.launch {
             newsRepository.getNews().collect { result ->
-                result.onSuccess { newsResponse ->
-                    viewModelState.update {
-                        it.copy(
-                            newsResponse = newsResponse,
-                            isLoading = false,
-                            errorMessages = ""
-                        )
-                    }
-                }
-                result.onFailure { throwable ->
-                    viewModelState.update {
-                        it.copy(
-                            newsResponse = null,
-                            isLoading = false,
-                            errorMessages = throwable.message.toString()
-                        )
-                    }
+                viewModelState.update {
+                    it.copy(
+                        newsResponse = result,
+                        isLoading = false,
+                        errorMessages = ""
+                    )
                 }
             }
         }
@@ -104,7 +93,6 @@ class ActivityViewModel @Inject constructor(
     fun deleteNews(id: String) {
         viewModelScope.launch {
             newsRepository.deleteNews(id)
-            refreshData()
         }
     }
 }
