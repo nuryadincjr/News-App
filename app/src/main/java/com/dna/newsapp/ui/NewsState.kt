@@ -1,31 +1,32 @@
 package com.dna.newsapp.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 @ExperimentalMaterial3Api
 fun rememberAppState(
+    context: Context,
     navController: NavHostController = rememberNavController(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
-) = remember(navController, coroutineScope) { NewsAppState(navController) }
+) = remember(navController, context) { NewsAppState(navController, context) }
 
 @Stable
 class NewsAppState(
-    val navController: NavHostController
+    val navController: NavHostController,
+    private val context: Context
 ) {
     val bottomBarTabs = MainTabs.values()
     val currentRoute: String
-        get() = navController.currentDestination?.route?: MainDestinations.HOME_ROUTE
+        get() = navController.currentDestination?.route ?: MainDestinations.HOME_ROUTE
 
     fun navigateToRoute(route: String) {
         if (route != currentRoute) {
@@ -39,16 +40,9 @@ class NewsAppState(
         }
     }
 
-    fun onTapItem(route: String, from: NavBackStackEntry) {
-        if (route != currentRoute) {
-            navController.navigate(route) {
-                launchSingleTop = true
-                restoreState = true
-                popUpTo(findStartDestination(navController.graph).id) {
-                    saveState = true
-                }
-            }
-        }
+    fun onTapItem(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        context.startActivity(intent)
     }
 }
 
@@ -58,3 +52,4 @@ private val NavGraph.startDestination: NavDestination?
 private tailrec fun findStartDestination(graph: NavDestination): NavDestination {
     return if (graph is NavGraph) findStartDestination(graph.startDestination!!) else graph
 }
+

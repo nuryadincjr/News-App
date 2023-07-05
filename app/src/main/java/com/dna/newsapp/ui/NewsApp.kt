@@ -13,8 +13,8 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +24,7 @@ import com.dna.newsapp.ui.theme.NewsAppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsApp() {
-    val appState = rememberAppState()
+    val appState = rememberAppState(LocalContext.current)
 
     Scaffold(
         bottomBar = {
@@ -42,7 +42,7 @@ fun NewsApp() {
                 modifier = Modifier.padding(innerPadding),
             ) {
                 mainNavGraph(
-                    onTapItem = appState::onTapItem,
+                    onTapItem = { value, _ -> appState.onTapItem(value) },
                 )
             }
         }
