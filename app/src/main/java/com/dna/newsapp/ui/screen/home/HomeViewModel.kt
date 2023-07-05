@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 sealed interface HomeUiState {
@@ -79,7 +80,8 @@ class HomeViewModel @Inject constructor(
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            newsRepository.getNews("us").collect { result ->
+            val locales = Locale.getDefault().country
+            newsRepository.getNews(locales).collect { result ->
                 result.onSuccess { newsResponse ->
                     viewModelState.update {
                         it.copy(
