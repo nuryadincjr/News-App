@@ -7,7 +7,6 @@ import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.dna.newsapp.R
 
-
 @Composable
 fun ImageHandler(
     url: String,

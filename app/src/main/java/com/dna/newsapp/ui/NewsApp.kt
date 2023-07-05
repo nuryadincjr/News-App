@@ -28,11 +28,13 @@ fun NewsApp() {
 
     Scaffold(
         bottomBar = {
-            AppBottomBar(
-                tabs = appState.bottomBarTabs,
-                currentRoute = appState.currentRoute,
-                navigateToRoute = appState::navigateToRoute
-            )
+            if (appState.shouldShowBottomBar) {
+                AppBottomBar(
+                    tabs = appState.bottomBarTabs,
+                    currentRoute = appState.currentRoute!!,
+                    navigateToRoute = appState::navigateToRoute
+                )
+            }
         },
     ) { innerPadding ->
         Row {
@@ -54,23 +56,27 @@ fun NewsApp() {
 private fun AppBottomBar(
     tabs: Array<MainTabs>,
     currentRoute: String,
-    navigateToRoute: (String) -> Unit
+    navigateToRoute: (String) -> Unit,
 ) {
+
+    val currentSection = tabs.first { it.route == currentRoute }
+
     NavigationBar(
         Modifier.windowInsetsBottomHeight(
             WindowInsets.navigationBars.add(WindowInsets(bottom = 56.dp))
         )
     ) {
+
         tabs.forEach { tab ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = tab.icon,
-                        contentDescription = stringResource(id = tab.title)
-                    )
-                }, selected = tab.route == currentRoute, onClick = {
-                    navigateToRoute(tab.route)
-                }, modifier = Modifier.navigationBarsPadding()
+            val selected = tab == currentSection
+
+            NavigationBarItem(icon = {
+                Icon(
+                    imageVector = tab.icon, contentDescription = stringResource(id = tab.title)
+                )
+            }, selected = selected, onClick = {
+                navigateToRoute(tab.route)
+            }, modifier = Modifier.navigationBarsPadding()
             )
         }
     }

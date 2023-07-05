@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 @Composable
@@ -17,16 +18,27 @@ import androidx.navigation.compose.rememberNavController
 fun rememberAppState(
     context: Context,
     navController: NavHostController = rememberNavController(),
-) = remember(navController, context) { NewsAppState(navController, context) }
+) = remember(context, navController) {
+    NewsAppState(
+        context, navController,
+    )
+}
 
 @Stable
 class NewsAppState(
+    private val context: Context,
     val navController: NavHostController,
-    private val context: Context
 ) {
+
     val bottomBarTabs = MainTabs.values()
-    val currentRoute: String
-        get() = navController.currentDestination?.route ?: MainDestinations.HOME_ROUTE
+    private val bottomBarRoutes = bottomBarTabs.map { it.route }
+
+    val shouldShowBottomBar: Boolean
+        @Composable get() = navController
+            .currentBackStackEntryAsState().value?.destination?.route in bottomBarRoutes
+
+    val currentRoute: String?
+        get() = navController.currentDestination?.route
 
     fun navigateToRoute(route: String) {
         if (route != currentRoute) {

@@ -24,14 +24,9 @@ val newsResponse = NewsResponse(
     status = "ok"
 )
 
-// Mengakses data dalam objek NewsResponse
-val totalResults = newsResponse.totalResults
 val articles = newsResponse.articles
-val status = newsResponse.status
 
-// Mengakses data dalam objek Articles
 val article = articles?.get(0)
-val publishedAt = article?.publishedAt
 val author = article?.author
 val urlToImage = article?.urlToImage
 val description = article?.description
