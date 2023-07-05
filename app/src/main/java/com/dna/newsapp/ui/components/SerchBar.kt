@@ -1,24 +1,26 @@
 package com.dna.newsapp.ui.components
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -29,48 +31,52 @@ import com.dna.newsapp.R
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    searchInput: String = "",
+    searchInput: MutableState<String>,
     onSearchInputChanged: (String) -> Unit,
+    onSearch: (String) -> Unit,
 ) {
-    val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
+
     val keyboardController = LocalSoftwareKeyboardController.current
     TextField(
-        value = searchInput,
+        value = searchInput.value,
         onValueChange = onSearchInputChanged,
         placeholder = { Text(stringResource(R.string.search)) },
         leadingIcon = { Icon(Icons.Filled.Search, null) },
         modifier = modifier
-            .fillMaxWidth().clip(MaterialTheme.shapes.extraLarge),
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.extraLarge),
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
             onSearch = {
-                submitSearch(onSearchInputChanged, context)
+                onSearch(searchInput.value)
                 keyboardController?.hide()
             }
-        )
+        ),
+        colors = TextFieldDefaults.textFieldColors(
+            disabledTextColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        trailingIcon = {
+            if (searchInput.value.isNotEmpty()) {
+                IconButton(onClick = {
+                    searchInput.value = ""
+                }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = stringResource(id = R.string.clear)
+                    )
+                }
+            }
+        }
     )
-}
-
-
-/**
- * Stub helper function to submit a user's search query
- */
-private fun submitSearch(
-    onSearchInputChanged: (String) -> Unit,
-    context: Context
-) {
-    onSearchInputChanged("")
-    Toast.makeText(
-        context,
-        "Search is not yet implemented",
-        Toast.LENGTH_SHORT
-    ).show()
 }
 
 @Preview
 @Composable
 fun SearchBarSearch() {
-    SearchBar(onSearchInputChanged = {})
+    val query = remember { mutableStateOf("") }
+    SearchBar(onSearchInputChanged = {}, onSearch = {}, searchInput = query)
 }

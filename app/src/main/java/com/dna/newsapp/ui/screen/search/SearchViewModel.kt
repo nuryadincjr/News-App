@@ -1,4 +1,4 @@
-package com.dna.newsapp.ui.screen.home
+package com.dna.newsapp.ui.screen.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,72 +13,74 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface HomeUiState {
+sealed interface SearchUiState {
 
     val isLoading: Boolean
     val errorMessages: String
+    val searchInput: String
 
     data class NoData(
         override val isLoading: Boolean,
         override val errorMessages: String,
-    ) : HomeUiState
+        override val searchInput: String
+    ) : SearchUiState
 
     data class HasNews(
         val newsResponse: NewsResponse,
         override val isLoading: Boolean,
         override val errorMessages: String,
-    ) : HomeUiState
+        override val searchInput: String
+    ) : SearchUiState
 }
 
-private data class HomeViewModelState(
+private data class SearchViewModelState(
     val newsResponse: NewsResponse? = null,
     val isLoading: Boolean = false,
     val errorMessages: String = "",
+    val searchInput: String = "",
 ) {
 
-    fun toNewsUiState(): HomeUiState =
+    fun toNewsUiState(): SearchUiState =
         if (newsResponse == null) {
-            HomeUiState.NoData(
+            SearchUiState.NoData(
                 isLoading = isLoading,
                 errorMessages = errorMessages,
+                searchInput = searchInput
             )
         } else {
-            HomeUiState.HasNews(
+            SearchUiState.HasNews(
                 newsResponse = newsResponse,
                 isLoading = isLoading,
                 errorMessages = errorMessages,
+                searchInput = searchInput
             )
         }
 }
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val newsRepository: NewsRepository,
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
-        HomeViewModelState(
-            isLoading = true,
+        SearchViewModelState(
+            isLoading = false,
         )
     )
 
-    val homeUiState = viewModelState
-        .map(HomeViewModelState::toNewsUiState)
+    val searchUiState = viewModelState
+        .map(SearchViewModelState::toNewsUiState)
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
             viewModelState.value.toNewsUiState()
         )
 
-    init {
-        refreshData()
-    }
-
-    fun refreshData() {
+    fun refreshData(query: String, sort: String, from: String) {
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            newsRepository.getNews("us").collect { result ->
+            newsRepository.getNews(q = query, sortBy = sort, from = from).collect { result ->
                 result.onSuccess { newsResponse ->
                     viewModelState.update {
                         it.copy(

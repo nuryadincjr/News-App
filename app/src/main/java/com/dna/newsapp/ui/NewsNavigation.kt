@@ -13,6 +13,8 @@ import androidx.navigation.compose.composable
 import com.dna.newsapp.R
 import com.dna.newsapp.ui.screen.home.HomeViewModel
 import com.dna.newsapp.ui.screen.home.Home
+import com.dna.newsapp.ui.screen.search.Search
+import com.dna.newsapp.ui.screen.search.SearchViewModel
 
 fun NavGraphBuilder.mainNavGraph(
     onTapItem: (String, NavBackStackEntry) -> Unit,
@@ -26,12 +28,12 @@ fun NavGraphBuilder.mainNavGraph(
     }
 
     composable(route = MainDestinations.SEARCH_ROUTE) { from ->
-//        val homeViewModel: HomeViewModel = hiltViewModel()
+        val searchViewModel: SearchViewModel = hiltViewModel()
 
-//        Search(
-//            viewModel = homeViewModel,
-//            onTapItem = { value -> onTapItem(value, from) },
-//        )
+        Search(
+            viewModel = searchViewModel,
+            onTapItem = { value -> onTapItem(value, from) },
+        )
     }
     composable(route = MainDestinations.HISTORY_ROUTE) { from ->
 //        val homeViewModel: HomeViewModel = hiltViewModel()

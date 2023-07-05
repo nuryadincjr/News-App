@@ -5,4 +5,13 @@
     <string name="search">Search</string>
     <string name="retry">Retry</string>
     <string name="load_article">Load Article</string>
+    <string name="error_search">Article not found, please search again!</string>
+    <string name="filter">Filter</string>
+    <string name="shorts">Short</string>
+    <string name="form">From</string>
+    <string name="apply_change">Apply Change</string>
+    <string name="form_hint">yyyy-MM-dd</string>
+    <string name="date_picker">Date Picker</string>
+    <string name="clear">Clear</string>
+    <string name="try_search">Explore your news!</string>
 </resources>

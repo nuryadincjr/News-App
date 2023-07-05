@@ -59,6 +59,6 @@ fun AppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun AppBarPreivew() {
+fun AppBarPreview() {
     AppBar(onActions = {})
 }
