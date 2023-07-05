@@ -20,15 +20,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.dna.newsapp.R
+import com.dna.newsapp.data.local.entity.NewsEntity
 import com.dna.newsapp.model.Articles
 import com.dna.newsapp.model.Filter
 import com.dna.newsapp.model.sortDefault
+import com.dna.newsapp.model.toNewsEntity
 
 @Composable
 fun ArticleList(
     articles: List<Articles?>?,
     lazyGridState: LazyGridState,
-    onTapItem: (String) -> Unit,
+    onTapContent: (NewsEntity) -> Unit,
     modifier: Modifier = Modifier,
     isSearch: Boolean = false,
     totalResults: Int?,
@@ -61,13 +63,15 @@ fun ArticleList(
 
                     if (index % 5 == 0) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
-                            NewsBigItem(article = item, onTapItem = onTapItem)
+                            NewsBigItem(
+                                article = item,
+                                onTapItem = { onTapContent(item.toNewsEntity()) })
                         }
                     } else {
                         item(span = { GridItemSpan(1) }) {
                             NewsItem(
                                 article = item,
-                                onTapItem = onTapItem,
+                                onTapItem = { onTapContent(item.toNewsEntity()) },
                             )
                         }
                     }

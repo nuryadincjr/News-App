@@ -44,7 +44,7 @@ data class Articles(
     val title: String,
 
     @field:SerializedName("url")
-    val url: String? = null,
+    val url: String,
 
     @field:SerializedName("content")
     val content: String? = null

@@ -40,9 +40,21 @@ class NewsAppState(
         }
     }
 
-    fun onTapItem(url: String) {
+    fun onNavigateToDetail(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)
+    }
+
+    fun onNavigateToSearch(route: String) {
+        if (route != currentRoute) {
+            navController.navigate(route) {
+                launchSingleTop = true
+                restoreState = true
+                popUpTo(findStartDestination(navController.graph).id) {
+                    saveState = true
+                }
+            }
+        }
     }
 }
 

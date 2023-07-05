@@ -2,6 +2,7 @@ package com.dna.newsapp.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dna.newsapp.data.local.entity.NewsEntity
 import com.dna.newsapp.data.repository.news.NewsRepository
 import com.dna.newsapp.model.NewsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -101,7 +102,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val sortDefault = newsRepository.getSortDefault()
+    fun insertNews(entities: NewsEntity) {
+        viewModelScope.launch {
+            newsRepository.insertNews(entities)
+        }
+    }
 
     val filterList = newsRepository.getSortFilter()
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dna.newsapp.R
+import com.dna.newsapp.data.local.entity.NewsEntity
 import com.dna.newsapp.model.Filter
 import com.dna.newsapp.ui.components.ArticleList
 import com.dna.newsapp.ui.components.ErrorLoad
@@ -36,7 +37,7 @@ import com.dna.newsapp.ui.components.SearchHandler
 @Composable
 fun Search(
     viewModel: SearchViewModel,
-    onTapItem: (String) -> Unit,
+    onTapContent: (NewsEntity) -> Unit,
 ) {
     val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
     val lazyGridState = rememberLazyGridState()
@@ -50,9 +51,9 @@ fun Search(
                 form
             )
         },
-        onTapItem = onTapItem,
-        sortFilters = viewModel.filterList,
+        onTapContent = onTapContent,
         lazyGridState = lazyGridState,
+        sortFilters = viewModel.filterList,
     )
 }
 
@@ -61,7 +62,7 @@ fun Search(
 private fun Search(
     searchUiState: SearchUiState,
     onRefresh: (String, String, String) -> Unit,
-    onTapItem: (String) -> Unit,
+    onTapContent: (NewsEntity) -> Unit,
     lazyGridState: LazyGridState,
     sortFilters: List<Filter>,
     modifier: Modifier = Modifier,
@@ -109,7 +110,7 @@ private fun Search(
                         ArticleList(
                             articles = searchUiState.newsResponse.articles,
                             lazyGridState = lazyGridState,
-                            onTapItem = onTapItem,
+                            onTapContent = onTapContent,
                             isSearch = true,
                             sortFilters = sortFilters,
                             onUpdate = { sort, from ->

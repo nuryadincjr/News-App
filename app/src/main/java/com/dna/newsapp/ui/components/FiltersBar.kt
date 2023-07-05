@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dna.newsapp.R
 import com.dna.newsapp.model.Filter
-import com.dna.newsapp.model.sortFilters2
+import com.dna.newsapp.model.sortFilters
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -180,10 +180,10 @@ fun FilterBar(
 @Preview
 @Composable
 fun FilterBarPreview() {
-    val sortState = remember { mutableStateOf(sortFilters2[0]) }
+    val sortState = remember { mutableStateOf(sortFilters[0]) }
     val fromDate = remember { mutableStateOf("") }
     FilterBar(
-        filters = sortFilters2,
+        filters = sortFilters,
         onUpdate = { _, _ -> },
         sortState = sortState,
         fromDate = fromDate,

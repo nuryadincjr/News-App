@@ -7,41 +7,52 @@ import androidx.compose.material.icons.outlined.LocalActivity
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dna.newsapp.R
-import com.dna.newsapp.ui.screen.home.HomeViewModel
+import com.dna.newsapp.data.local.entity.NewsEntity
+import com.dna.newsapp.ui.screen.activity.Activity
+import com.dna.newsapp.ui.screen.activity.ActivityViewModel
 import com.dna.newsapp.ui.screen.home.Home
+import com.dna.newsapp.ui.screen.home.HomeViewModel
 import com.dna.newsapp.ui.screen.search.Search
 import com.dna.newsapp.ui.screen.search.SearchViewModel
 
 fun NavGraphBuilder.mainNavGraph(
-    onTapItem: (String, NavBackStackEntry) -> Unit,
+    onTapItem: (String) -> Unit,
+    onTapContent: (NewsEntity) -> Unit,
 ) {
-    composable(route = MainDestinations.HOME_ROUTE) { from ->
+    composable(route = MainDestinations.HOME_ROUTE) {
         val homeViewModel: HomeViewModel = hiltViewModel()
 
         Home(
             viewModel = homeViewModel,
-        ) { value -> onTapItem(value, from) }
+            onTapItem = { value -> onTapItem(value) },
+            onTapContent = {
+                homeViewModel.insertNews(it)
+                onTapContent(it)
+            }
+        )
     }
 
-    composable(route = MainDestinations.SEARCH_ROUTE) { from ->
+    composable(route = MainDestinations.SEARCH_ROUTE) {
         val searchViewModel: SearchViewModel = hiltViewModel()
 
         Search(
-            viewModel = searchViewModel,
-            onTapItem = { value -> onTapItem(value, from) },
-        )
+            viewModel = searchViewModel
+        ) {
+            searchViewModel.insertNews(it)
+            onTapContent(it)
+        }
     }
-    composable(route = MainDestinations.HISTORY_ROUTE) { from ->
-//        val homeViewModel: HomeViewModel = hiltViewModel()
+    composable(route = MainDestinations.HISTORY_ROUTE) {
+        val activityViewModel: ActivityViewModel = hiltViewModel()
 
-//        Activity(
-//            viewModel = homeViewModel,
-//            onTapItem = { value -> onTapItem(value, from) },
-//        )
+        Activity(
+            viewModel = activityViewModel,
+            onTapItem = { value -> onTapItem(value) },
+            onTapContent = onTapContent
+        )
     }
 }
 

@@ -1,10 +1,9 @@
-package com.dna.newsapp.ui.screen.search
+package com.dna.newsapp.ui.screen.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dna.newsapp.data.local.entity.NewsEntity
 import com.dna.newsapp.data.repository.news.NewsRepository
-import com.dna.newsapp.model.NewsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,74 +13,72 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface SearchUiState {
+sealed interface ActivityUiState {
 
     val isLoading: Boolean
     val errorMessages: String
-    val searchInput: String
 
     data class NoData(
         override val isLoading: Boolean,
         override val errorMessages: String,
-        override val searchInput: String
-    ) : SearchUiState
+    ) : ActivityUiState
 
     data class HasNews(
-        val newsResponse: NewsResponse,
+        val newsEntity: List<NewsEntity>?,
         override val isLoading: Boolean,
         override val errorMessages: String,
-        override val searchInput: String
-    ) : SearchUiState
+    ) : ActivityUiState
 }
 
-private data class SearchViewModelState(
-    val newsResponse: NewsResponse? = null,
+private data class ActivityViewModelState(
+    val newsResponse: List<NewsEntity>? = null,
     val isLoading: Boolean = false,
     val errorMessages: String = "",
-    val searchInput: String = "",
 ) {
 
-    fun toNewsUiState(): SearchUiState =
+    fun toNewsUiState(): ActivityUiState =
         if (newsResponse == null) {
-            SearchUiState.NoData(
+            ActivityUiState.NoData(
                 isLoading = isLoading,
                 errorMessages = errorMessages,
-                searchInput = searchInput
             )
         } else {
-            SearchUiState.HasNews(
-                newsResponse = newsResponse,
+            ActivityUiState.HasNews(
+                newsEntity = newsResponse,
                 isLoading = isLoading,
                 errorMessages = errorMessages,
-                searchInput = searchInput
             )
         }
 }
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
+class ActivityViewModel @Inject constructor(
     private val newsRepository: NewsRepository,
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
-        SearchViewModelState(
-            isLoading = false,
+        ActivityViewModelState(
+            isLoading = true,
         )
     )
 
-    val searchUiState = viewModelState
-        .map(SearchViewModelState::toNewsUiState)
+    val activityUiState = viewModelState
+        .map(ActivityViewModelState::toNewsUiState)
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
             viewModelState.value.toNewsUiState()
         )
 
-    fun refreshData(query: String, sort: String, from: String) {
+    init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            newsRepository.getNews(q = query, sortBy = sort, from = from).collect { result ->
+            newsRepository.getNews().collect { result ->
                 result.onSuccess { newsResponse ->
                     viewModelState.update {
                         it.copy(
@@ -104,11 +101,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun insertNews(entities: NewsEntity) {
+    fun deleteNews(id: String) {
         viewModelScope.launch {
-            newsRepository.insertNews(entities)
+            newsRepository.deleteNews(id)
+            refreshData()
         }
     }
-
-    val filterList = newsRepository.getSortFilter()
 }

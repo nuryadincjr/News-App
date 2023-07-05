@@ -42,7 +42,8 @@ fun NewsApp() {
                 modifier = Modifier.padding(innerPadding),
             ) {
                 mainNavGraph(
-                    onTapItem = { value, _ -> appState.onTapItem(value) },
+                    onTapItem = appState::onNavigateToSearch,
+                    onTapContent = { appState.onNavigateToDetail(it.url) },
                 )
             }
         }
