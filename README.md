@@ -1,5 +1,6 @@
 # News-App
-composable generation
+@composable generation
+![brand_top](https://github.com/nuryadincjr/News-App/assets/51723168/18fe9239-7250-40d7-963a-3e8854a9e5fe)
 
 ## Screenshots
 <p align="center">
